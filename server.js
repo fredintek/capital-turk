@@ -27,6 +27,12 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // ROUTES INITIALIZATION
+app.get("/api/v1", (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    message: "Welcome to capital turk API...",
+  });
+});
 
 // INVALID ROUTE HANDLING
 app.all("*", (req, res, next) => {
