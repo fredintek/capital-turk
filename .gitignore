@@ -1,0 +1,49 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Dependency directories
+jspm_packages/
+
+# Environment variables
+.env
+.env.test
+.env.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Vscode settings
+.vscode/
+
+# Production files
+build/
+dist/
+
+# Test directories and coverage reports
+coverage/
+.nyc_output/
+
+# SASS or CSS preprocessors build files
+.sass-cache/
+
+# Package-lock or yarn.lock (if you want to avoid them, but it’s generally good to commit them)
+package-lock.json
+yarn.lock
+
+# Timestamps and compiled files
+*.pem
+*.key
+*.csr
+
+# Cloudinary (if used to store images)
+uploads/
+
+# Other custom files you may want to ignore
+*.bak
+*.swp
