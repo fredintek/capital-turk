@@ -10,6 +10,10 @@ const ShowcaseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    videoLink: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

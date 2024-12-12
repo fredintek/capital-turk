@@ -69,9 +69,9 @@ exports.updateShowcase = catchAsync(async (req, res, next) => {
 
 exports.createShowcase = catchAsync(async (req, res, next) => {
   // get request body data
-  const { title, content } = req.body;
+  const { title, content, videoLink } = req.body;
 
-  if (!title || !content) {
+  if (!title || !content || !videoLink) {
     return next(new AppError("Missing required fields", 400));
   }
 
@@ -79,6 +79,7 @@ exports.createShowcase = catchAsync(async (req, res, next) => {
     await Showcase.create({
       title,
       content,
+      videoLink,
     });
     res.status(201).json({
       status: "success",
