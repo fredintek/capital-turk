@@ -7,6 +7,9 @@ const AppError = require("./utils/AppError");
 const globalErrorHandler = require("./middlewares/errorHandler");
 const connectDB = require("./config/db/connectDB");
 
+// IMPORT ROUTES
+const FunRoutes = require("./routes/fun.routes");
+
 // INITIALIZE APP INSTANCE
 const app = express();
 
@@ -14,6 +17,7 @@ const app = express();
 connectDB();
 
 // IMPORT CLOUDINARY CONFIGURATIONS
+require("./services/cloudinary"); // This will load cloudinary configuration
 
 // MIDDLEWARES
 app.use(express.json());
@@ -33,6 +37,8 @@ app.get("/api/v1", (req, res, next) => {
     message: "Welcome to capital turk API...",
   });
 });
+
+app.use("/api/v1/fun", FunRoutes);
 
 // INVALID ROUTE HANDLING
 app.all("*", (req, res, next) => {
