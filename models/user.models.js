@@ -3,45 +3,48 @@ const validator = require("validator");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
-const UserSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: [true, "Email is required"],
-    unique: true,
-    validate: [validator.isEmail, "Please provide a valid email address"],
-    trim: true,
-    lowercase: true,
-  },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-    select: false, // Don't return password in responses
-    validate: {
-      // Minimum eight characters, at least one letter, one number and one special character
-      validator: function (pwd) {
-        return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
-          pwd
-        );
-      },
-      message:
-        "Password must contain minimum eight characters, at least one letter, one number and one special character",
+const UserSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+      validate: [validator.isEmail, "Please provide a valid email address"],
+      trim: true,
+      lowercase: true,
     },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      select: false, // Don't return password in responses
+      validate: {
+        // Minimum eight characters, at least one letter, one number and one special character
+        validator: function (pwd) {
+          return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+            pwd
+          );
+        },
+        message:
+          "Password must contain minimum eight characters, at least one letter, one number and one special character",
+      },
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    passwordResetToken: {
+      type: String,
+      select: false,
+    },
+    passwordResetTokenExpiration: {
+      type: Date,
+      select: false,
+    },
+    changedPasswordAt: Date,
   },
-  role: {
-    type: String,
-    enum: ["user", "admin"],
-    default: "user",
-  },
-  passwordResetToken: {
-    type: String,
-    select: false,
-  },
-  passwordResetTokenExpiration: {
-    type: Date,
-    select: false,
-  },
-  changedPasswordAt: Date,
-});
+  { timestamps: true }
+);
 
 UserSchema.pre("save", function (next) {
   if (this.isModified("password")) {

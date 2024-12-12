@@ -11,6 +11,7 @@ const connectDB = require("./config/db/connectDB");
 const FunRoutes = require("./routes/fun.routes");
 const UserRoutes = require("./routes/user.routes");
 const ShowcaseRoutes = require("./routes/showcase.routes");
+const TodayRoutes = require("./routes/today.routes");
 
 // INITIALIZE APP INSTANCE
 const app = express();
@@ -43,6 +44,7 @@ app.get("/api/v1", (req, res, next) => {
 app.use("/api/v1/fun", FunRoutes);
 app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/showcase", ShowcaseRoutes);
+app.use("/api/v1/today", TodayRoutes);
 
 // INVALID ROUTE HANDLING
 app.all("*", (req, res, next) => {
