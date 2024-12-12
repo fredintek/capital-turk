@@ -7,6 +7,7 @@ const {
 } = require("../utils/tokenGeneration");
 const User = require("../models/user.models");
 const Email = require("../services/email");
+const crypto = require("crypto");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   // get all users
