@@ -13,6 +13,7 @@ const UserRoutes = require("./routes/user.routes");
 const ShowcaseRoutes = require("./routes/showcase.routes");
 const TodayRoutes = require("./routes/today.routes");
 const BroadcastFlowRoutes = require("./routes/broadcastFlow.routes");
+const CommunicationRoutes = require("./routes/communication.routes");
 
 // INITIALIZE APP INSTANCE
 const app = express();
@@ -47,6 +48,7 @@ app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/showcase", ShowcaseRoutes);
 app.use("/api/v1/today", TodayRoutes);
 app.use("/api/v1/broadcast-flow", BroadcastFlowRoutes);
+app.use("/api/v1/communication", CommunicationRoutes);
 
 // INVALID ROUTE HANDLING
 app.all("*", (req, res, next) => {

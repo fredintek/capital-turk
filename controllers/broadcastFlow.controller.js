@@ -45,9 +45,19 @@ exports.updateBroadcastFlow = catchAsync(async (req, res, next) => {
     return next(new AppError("BroadcastFlow data not found", 404));
   }
 
+  if (req.body.day) {
+    const isExistsBroadcatstFlowWithDay = await BroadcastFlow.findOne({
+      day: req.body.day,
+    });
+
+    if (isExistsBroadcatstFlowWithDay) {
+      return next(new AppError(`${req.body.day} already exists`, 400));
+    }
+  }
+
   // update fun data
   let updateBroadcastFlowObj = {
-    time: req.body.time || foundBroadcastFlowData.title,
+    day: req.body.day || foundBroadcastFlowData.day,
     content: req.body.content || foundBroadcastFlowData.content,
   };
 
@@ -64,6 +74,37 @@ exports.updateBroadcastFlow = catchAsync(async (req, res, next) => {
     status: "success",
     message: "BroadcastFlow data updated successfully",
     data: broadcastFlowData,
+  });
+});
+
+exports.removeBroadcastFlowContent = catchAsync(async (req, res, next) => {
+  // get broadcastFlow ID
+  const broadcastFlowId = req.params.broadcastFlowId;
+
+  if (!(await BroadcastFlow.findById(req.params.broadcastFlowId))) {
+    return next(new AppError("This Broadcast flow data does not exist", 400));
+  }
+
+  // get broadcastFlow content ID
+  const contentId = req.params.contentId;
+
+  if (!(await BroadcastFlow.findOne({ "content._id": req.params.contentId }))) {
+    return next(
+      new AppError("This Broadcast flow data content does not exist", 400)
+    );
+  }
+
+  // find and remove the broadcast flow content ID
+  const contentData = await BroadcastFlow.findByIdAndUpdate(
+    broadcastFlowId,
+    { $pull: { content: { _id: contentId } } },
+    { new: true }
+  ).exec();
+
+  res.status(200).json({
+    message: "Content successfully removed",
+    status: "success",
+    data: contentData,
   });
 });
 

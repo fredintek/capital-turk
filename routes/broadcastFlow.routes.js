@@ -7,6 +7,7 @@ const {
   createBroadcastFlow,
   updateBroadcastFlow,
   deleteBroadcastFlow,
+  removeBroadcastFlowContent,
 } = require("../controllers/broadcastFlow.controller");
 
 const router = express.Router();
@@ -23,6 +24,9 @@ router.post("/", createBroadcastFlow);
 
 // update a new broadcastFlow data
 router.patch("/:broadcastFlowId", updateBroadcastFlow);
+
+// remove broadcastFlow content data
+router.patch("/:broadcastFlowId/:contentId", removeBroadcastFlowContent);
 
 // delete a broadcastFlow data
 router.delete("/:broadcastFlowId", deleteBroadcastFlow);
