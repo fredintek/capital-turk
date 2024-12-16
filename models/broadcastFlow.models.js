@@ -33,4 +33,6 @@ const BroadcastFlowSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// broadcast schema middlewares
+
 module.exports = mongoose.model("BroadcastFlow", BroadcastFlowSchema);
