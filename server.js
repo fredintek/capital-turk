@@ -12,6 +12,7 @@ const FunRoutes = require("./routes/fun.routes");
 const UserRoutes = require("./routes/user.routes");
 const ShowcaseRoutes = require("./routes/showcase.routes");
 const TodayRoutes = require("./routes/today.routes");
+const BroadcastFlowRoutes = require("./routes/broadcastFlow.routes");
 
 // INITIALIZE APP INSTANCE
 const app = express();
@@ -45,6 +46,7 @@ app.use("/api/v1/fun", FunRoutes);
 app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/showcase", ShowcaseRoutes);
 app.use("/api/v1/today", TodayRoutes);
+app.use("/api/v1/broadcast-flow", BroadcastFlowRoutes);
 
 // INVALID ROUTE HANDLING
 app.all("*", (req, res, next) => {
