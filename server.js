@@ -52,9 +52,13 @@ app.use("/api/v1/communication", CommunicationRoutes);
 
 // INVALID ROUTE HANDLING
 app.all("*", (req, res, next) => {
-  return next(
-    new AppError(`Cannot find ${req.originalUrl} on this server`, 404)
-  );
+  if (process.env.NODE_ENV === "production") {
+    return next(new AppError(`Something went wrong`, 500));
+  } else {
+    return next(
+      new AppError(`Cannot find ${req.originalUrl} on this server`, 404)
+    );
+  }
 });
 
 // GLOBAL ERROR HANDLING

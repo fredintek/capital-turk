@@ -8,6 +8,8 @@ const {
 const User = require("../models/user.models");
 const Email = require("../services/email");
 const crypto = require("crypto");
+const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   // get all users
@@ -222,4 +224,85 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     status: "success",
     message: "Password reset successfully",
   });
+});
+
+exports.updateUserProfile = catchAsync(async (req, res, next) => {
+  const userId = req.params.userId;
+
+  // get user from database
+  const foundUser = await User.findById(userId);
+  if (!foundUser) {
+    return next(new AppError("User not found", 404));
+  }
+
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["username", "profilePicture"];
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
+  if (!isValidOperation) {
+    return next(new AppError("Invalid data entry", 400));
+  }
+
+  let updateUserObj = {
+    username: req.body.username || foundUser.username,
+  };
+
+  if (req.file && req.file.buffer) {
+    try {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "image",
+          folder: "capital-turk/user",
+        },
+        async (error, result) => {
+          if (error) {
+            return next(new AppError("Image upload failed", 500));
+          }
+
+          // delete previous user image
+          if (foundUser.profilePicture.public_id) {
+            await cloudinary.uploader.destroy(
+              foundUser.profilePicture.public_id
+            );
+          }
+
+          const updatedUserData = await User.findByIdAndUpdate(
+            userId,
+            {
+              ...updateUserObj,
+              profilePicture: {
+                public_id: result.public_id,
+                url: result.secure_url,
+              },
+            },
+            { new: true, runValidators: true }
+          ).exec();
+
+          res.status(200).json({
+            status: "success",
+            message: "Profile updated successfully",
+            data: updatedUserData,
+          });
+        }
+      );
+
+      // Convert the buffer to a stream and pipe it to Cloudinary's upload stream
+      streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+    } catch (error) {
+      return next(new AppError(error.message, 400));
+    }
+  } else {
+    const userData = await User.findByIdAndUpdate(userId, updateUserObj, {
+      new: true,
+      runValidators: true,
+    }).exec();
+
+    res.status(200).json({
+      status: "success",
+      message: "Profile updated successfully",
+      data: userData,
+    });
+  }
 });

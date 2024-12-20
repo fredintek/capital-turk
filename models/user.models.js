@@ -28,6 +28,28 @@ const UserSchema = new mongoose.Schema(
           "Password must contain minimum eight characters, at least one letter, one number and one special character",
       },
     },
+    profilePicture: {
+      public_id: String,
+      url: String,
+    },
+    username: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      validate: [
+        {
+          validator: function (value) {
+            // Allow empty usernames or check minimum length
+            return !value || value.length >= 4;
+          },
+          message: "Username must be at least 4 characters long",
+        },
+        {
+          validator: validator.isAlphanumeric,
+          message: "Username should only contain alphanumeric characters",
+        },
+      ],
+    },
     role: {
       type: String,
       enum: ["user", "admin"],

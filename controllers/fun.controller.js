@@ -67,7 +67,9 @@ exports.updateFun = catchAsync(async (req, res, next) => {
           }
 
           // delete previous fun image
-          await cloudinary.uploader.destroy(foundFunData.image.public_id);
+          if (foundFunData.image.public_id) {
+            await cloudinary.uploader.destroy(foundFunData.image.public_id);
+          }
 
           // update fun data with new image
           updateFunObj.image = {

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const FunSchema = new mongoose.Schema(
   {
     time: {
-      type: Date,
+      type: String,
       required: true,
     },
     title: {
