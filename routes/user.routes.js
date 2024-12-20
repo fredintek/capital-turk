@@ -9,6 +9,7 @@ const {
   forgotPassword,
   resetPassword,
   updateUserProfile,
+  currentUser,
 } = require("../controllers/user.controller");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const { restrictRole } = require("../middlewares/restrictedRoles");
@@ -33,6 +34,9 @@ router.use(isAuthenticated);
 
 // logout user
 router.post("/logout", logout);
+
+// logout user
+router.get("/current", currentUser);
 
 router.use(restrictRole("admin"));
 // create user

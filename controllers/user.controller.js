@@ -306,3 +306,20 @@ exports.updateUserProfile = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+exports.currentUser = catchAsync(async (req, res, next) => {
+  // get the current user
+  const user = await User.findById(req.user.id).select(
+    "-password -createdAt -updatedAt -__v"
+  );
+
+  if (!user) {
+    return next(new AppError("You need to login", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "User data fetched successfully",
+    data: user,
+  });
+});
