@@ -24,10 +24,10 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.loginUser = catchAsync(async (req, res, next) => {
   // LOGIN WITH EMAIL AND PASSWORD
-  const { email, password } = req.body;
+  const { email, password: userPassword } = req.body;
 
   // CHECK IF FIELDS ARE PROVIDED
-  if (!email || !password) {
+  if (!email || !userPassword) {
     return next(new AppError("All fields are required", 401));
   }
 
@@ -40,10 +40,14 @@ exports.loginUser = catchAsync(async (req, res, next) => {
   }
 
   // CHECK IF PASSWORD MATCH
-  const passwordMatch = await foundUser.comparePassword(password);
+  const passwordMatch = await foundUser.comparePassword(userPassword);
   if (!passwordMatch) {
     return next(new AppError("Invalid password", 401));
   }
+
+  // REMOVE SENSITIVE FIELDS FROM RESPONSE
+  const { password, createdAt, updatedAt, __v, ...userWithoutSensitiveFields } =
+    foundUser.toObject();
 
   // CREATE REFRESH AND ACCESS TOKEN
   const accessToken = generateAccessToken(foundUser);
@@ -54,6 +58,7 @@ exports.loginUser = catchAsync(async (req, res, next) => {
     message: "Logged in successfully",
     data: {
       token: accessToken,
+      user: userWithoutSensitiveFields,
     },
   });
 });
@@ -112,7 +117,11 @@ exports.refreshAccess = catchAsync(async (req, res, next) => {
       },
     });
   } catch (err) {
-    return new AppError("Invalid or expired token. Please log in again.", 401);
+    res.status(401).json({
+      status: "fail",
+      message: "Refresh token failed",
+    });
+    // return new AppError("Invalid or expired token. Please log in again.", 401);
   }
 });
 
