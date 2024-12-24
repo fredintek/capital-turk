@@ -21,8 +21,10 @@ exports.generateAndSendRefreshToken = (user, res) => {
 
   res.cookie("jwt", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "None",
+    secure: false,
+    sameSite: "Lax",
+    // secure: process.env.NODE_ENV === "production",
+    // sameSite: "None",
     maxAge: process.env.REFRESH_TOKEN_COOKIE_EXPIRATION,
   });
 };
