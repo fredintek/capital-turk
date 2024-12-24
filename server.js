@@ -31,7 +31,7 @@ app.use(cookieParser());
 
 // Define allowed origin
 const corsOptions = {
-  origin: "http://localhost:3001", // frontend URL
+  origin: ["http://localhost:3001", "http://localhost:3000"], // frontend URL
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 };
 
