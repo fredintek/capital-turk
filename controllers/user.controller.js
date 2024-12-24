@@ -202,7 +202,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    message: "Reset password email sent successfully",
+    message: "Reset password email sent successfully, check your email",
   });
 });
 
